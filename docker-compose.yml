@@ -1,0 +1,109 @@
+# beCPG Community Edition for local development.
+# Start with `./scripts/start.sh`, or `docker compose up -d` once the images exist.
+# Not a production setup: default passwords, no TLS, no backup.
+
+name: becpg-starter
+
+services:
+  becpg:
+    image: ${BECPG_IMAGE_REGISTRY:-becpg-community}/becpg-test-core:${BECPG_VERSION:-local}
+    environment:
+      CATALINA_OPTS: >-
+        -Xmx${BECPG_HEAP:-3G}
+        -Duser.language=${BECPG_LANGUAGE:-en}
+        -Duser.country=${BECPG_COUNTRY:-US}
+        -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip=*
+      # Public default passwords of the Alfresco development keystore shipped in the image.
+      # Use your own keystore for anything but local development.
+      JAVA_TOOL_OPTIONS: >-
+        -Dencryption.keystore.type=JCEKS
+        -Dencryption.cipherAlgorithm=AES/CBC/PKCS5Padding
+        -Dencryption.keyAlgorithm=AES
+        -Dencryption.keystore.location=/usr/local/tomcat/shared/classes/alfresco/extension/keystore/keystore
+        -Dmetadata-keystore.password=mp6yc0UD9e
+        -Dmetadata-keystore.aliases=metadata
+        -Dmetadata-keystore.metadata.password=oKIWzVdEdA
+        -Dmetadata-keystore.metadata.algorithm=AES
+    mem_limit: 5g
+    depends_on:
+      becpg-db:
+        condition: service_healthy
+      solr:
+        condition: service_started
+      transform:
+        condition: service_started
+    ports:
+      - "${BECPG_PORT:-8080}:8080"
+    volumes:
+      - becpg_data:/usr/local/tomcat/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf -o /dev/null http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-"]
+      interval: 15s
+      timeout: 10s
+      retries: 60
+      start_period: 120s
+
+  becpg-share:
+    image: ${BECPG_IMAGE_REGISTRY:-becpg-community}/becpg-test-share:${BECPG_VERSION:-local}
+    environment:
+      JAVA_OPTS: "-Duser.language=en -Duser.country=US -Dtomcat.util.scan.StandardJarScanFilter.jarsToSkip=*"
+      REPO_HOST: becpg
+      REPO_PORT: 8080
+    mem_limit: 2g
+    depends_on:
+      - becpg
+    ports:
+      - "${SHARE_PORT:-8180}:8080"
+    volumes:
+      - becpg_share_data:/usr/local/tomcat/data
+
+  becpg-db:
+    image: mysql:9.7
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: becpg
+      MYSQL_PASSWORD: becpg
+      MYSQL_ROOT_PASSWORD: becpg
+    mem_limit: 2g
+    volumes:
+      - ./docker/db/becpg-db.cnf:/etc/mysql/conf.d/becpg-db.cnf:ro
+      - becpg_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ubecpg -pbecpg --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
+
+  solr:
+    build: ./docker/solr
+    image: becpg-starter/solr:2.0.17
+    environment:
+      SOLR_ALFRESCO_HOST: becpg
+      SOLR_ALFRESCO_PORT: 8080
+      SOLR_SOLR_HOST: solr
+      SOLR_SOLR_PORT: 8983
+      SOLR_CREATE_ALFRESCO_DEFAULTS: alfresco,archive
+      ALFRESCO_SECURE_COMMS: secret
+      JAVA_TOOL_OPTIONS: "-Dalfresco.secureComms.secret=changethatsecret"
+    mem_limit: 2g
+    volumes:
+      - solr_data:/opt/alfresco-search-services/data
+
+  transform:
+    image: alfresco/alfresco-transform-core-aio:5.4.0
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    mem_limit: 1g
+    # The beCPG image expects the transformer under this host name.
+    hostname: alfresco-transform-core-aio
+    networks:
+      default:
+        aliases:
+          - alfresco-transform-core-aio
+
+volumes:
+  becpg_db:
+  becpg_data:
+  becpg_share_data:
+  solr_data:
