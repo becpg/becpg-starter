@@ -1,6 +1,8 @@
-// A product development agent: Claude drives beCPG through the remote API.
-// Claude decides what to do; beCPG stores the data and computes every value through its formulation
+// A product development agent: an LLM drives beCPG through the remote API.
+// The model decides what to do; beCPG stores the data and computes every value through its formulation
 // engine. The tools never compute nutrition, allergens or costs themselves.
+// The default provider is Anthropic Claude. To use another LLM, replace the model call in runAgent:
+// the system prompt and the tool functions do not depend on the provider.
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
@@ -139,7 +141,7 @@ function buildTools(emit: (event: AgentEvent) => void) {
 }
 
 /**
- * Runs one user turn. The history is append-only: it holds every block Claude returned, thinking
+ * Runs one user turn. The history is append-only: it holds every block the model returned, thinking
  * included, so it can be sent back unchanged on the next turn.
  */
 export async function runAgent(history: History, userText: string, emit: (event: AgentEvent) => void): Promise<History> {

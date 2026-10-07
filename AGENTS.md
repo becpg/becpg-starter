@@ -26,7 +26,7 @@ scripts/becpg.mjs       tiny CLI around the API, handy for agents and shell scri
 app/                    Product Studio (Next.js App Router, TypeScript, no UI library, beCPG theme)
 app/lib/becpg.ts        the only module that talks to beCPG
 app/lib/products.ts     view models built from the API (recipes, raw materials)
-app/lib/agent.ts        the product assistant: Claude, its system prompt and its tools
+app/lib/agent.ts        the product assistant: the LLM call, its system prompt and its tools
 app/scripts/agent.mts   the same agent on the command line (npm run agent -- "...")
 ```
 
@@ -47,7 +47,7 @@ cd app && npm run typecheck
 ```
 
 The local stack uses `admin` / `becpg`, defined in `.env`. These are development values only.
-The assistant needs `ANTHROPIC_API_KEY` in the same `.env`.
+The assistant needs an LLM key in the same `.env` (`ANTHROPIC_API_KEY` for the default provider).
 
 ## Community and Enterprise
 

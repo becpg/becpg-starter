@@ -4,13 +4,13 @@
 
 # beCPG starter
 
-**Let Claude run your PLM.**
+**Let AI run your PLM.**
 
 An open source starter where an AI agent works directly in beCPG, the PLM for food, beverage and
 cosmetics: it reads your products, builds recipes, and lets the beCPG formulation engine compute
 costs, nutrition, allergens and ingredients.
 
-[![License: MIT](https://img.shields.io/badge/starter-MIT-004353.svg)](LICENSE) [![beCPG Community](https://img.shields.io/badge/beCPG_Community-LGPL_v3-00767b.svg)](https://github.com/becpg/becpg-community) [![Agent: Claude](https://img.shields.io/badge/agent-Claude-ff642d.svg)](#talk-to-your-plm)
+[![License: MIT](https://img.shields.io/badge/starter-MIT-004353.svg)](LICENSE) [![beCPG Community](https://img.shields.io/badge/beCPG_Community-LGPL_v3-00767b.svg)](https://github.com/becpg/becpg-community) [![AI agent](https://img.shields.io/badge/AI_agent-any_LLM-ff642d.svg)](#talk-to-your-plm)
 
 [Quick start](#quick-start) · [Talk to your PLM](#talk-to-your-plm) · [Build your own agents](#build-your-own-agents) · [Community and Enterprise](#start-with-community-go-further-with-enterprise)
 
@@ -22,7 +22,7 @@ costs, nutrition, allergens and ingredients.
 
 - **beCPG Community running on your machine**, in one command: product repository, formulation
   engine, versions, workflows, a full user interface and a REST API.
-- **Product Studio**, a web app in the beCPG colours with a **product assistant** built on Claude.
+- **Product Studio**, a web app in the beCPG colours with a **product assistant** built on a large language model (LLM).
   Ask it for a variant, a cost analysis or a new recipe: it works in beCPG through the API, and every
   figure it shows comes from the formulation engine.
 - **The same agent on the command line**, and its tools in one TypeScript file: the starting point
@@ -33,7 +33,7 @@ reads back the result. Detailed editing stays in the beCPG interface, one click 
 
 ## Quick start
 
-You need Docker (8 GB of RAM free), Node.js 20+, git and a [Claude API key](https://platform.claude.com).
+You need Docker (8 GB of RAM free), Node.js 20+, git and an API key for an LLM.
 
 ```bash
 git clone https://github.com/becpg/becpg-starter.git
@@ -45,7 +45,8 @@ The first run builds beCPG Community from its [open source repository](https://g
 (10 to 20 minutes, then a few seconds), starts it and loads test data: 10 raw materials with their
 nutrients, allergens, ingredients and costs, and 2 recipes.
 
-Add your Claude API key to `.env` (`ANTHROPIC_API_KEY=...`), then start the app:
+Add your LLM API key to `.env`, then start the app. The starter ships with Anthropic Claude as its default
+provider (`ANTHROPIC_API_KEY=...`); see the [FAQ](#faq) to use another one.
 
 ```bash
 cd app
@@ -102,8 +103,8 @@ npm run agent -- "Create a vegan variant of the oat bar and give me its cost per
 ```
 
 Run it from a scheduled job, plug it into your ERP flows or your own interface. To extend the
-starter itself, open the folder in [Claude Code](https://claude.com/claude-code): `AGENTS.md` and the
-`becpg-api` skill tell it how the beCPG API works and what it must not rebuild.
+starter itself, open the folder in your AI coding assistant: `AGENTS.md` and the `becpg-api`
+skill tell it how the beCPG API works and what it must not rebuild.
 
 ## Start with Community, go further with Enterprise
 
@@ -131,7 +132,7 @@ start building. beCPG Enterprise takes you much further.
 ```mermaid
 flowchart LR
     user(["You"]) --> studio["Product Studio<br/>and its assistant"]
-    studio --> agent["Claude agent<br/>app/lib/agent.ts"]
+    studio --> agent["AI agent<br/>app/lib/agent.ts"]
     cli(["Scripts and scheduled jobs"]) --> agent
     agent -- "REST API" --> becpg["beCPG<br/>repository · formulation engine"]
     studio -- "Open in beCPG" --> share["beCPG interface"]
@@ -141,15 +142,18 @@ flowchart LR
 ## FAQ
 
 **Is it free?**
-The starter is under the MIT license and beCPG Community under the LGPL v3. The Claude API is billed by
-Anthropic on your own key. The Enterprise modules and the support are paid.
+The starter is under the MIT license and beCPG Community under the LGPL v3. The LLM is billed by your
+provider, on your own key. The Enterprise modules and the support are paid.
 
 **Can the agent break my data?**
 It only works through the beCPG API, with the rights of the beCPG user you configure, and it saves
 variants under new codes when you ask it to explore. Point it at a test instance before your own data.
 
-**Can I use another model or my own agent framework?**
-Yes. The tools are plain calls to the beCPG REST API: wrap them in the framework you use.
+**Can I use my own LLM?**
+Yes. The agent is one file: a system prompt and tools that are plain calls to the beCPG REST API.
+The default implementation calls Anthropic Claude; swap the model call in `app/lib/agent.ts` for
+OpenAI, Mistral, a model hosted in Europe or on your own servers, or wrap the tools in the agent
+framework you already use.
 
 **Can I run this in production?**
 The starter is a development setup: default passwords, no TLS, no backup. For production, use your own
@@ -165,7 +169,7 @@ configuration or the beCPG hosting.
 | `scripts/seed.mjs` | Test data created through the API, safe to run again |
 | `scripts/becpg.mjs` | Command line client for the beCPG API |
 | `app/` | Product Studio (Next.js); `lib/agent.ts` is the agent, `lib/becpg.ts` the API client |
-| `AGENTS.md`, `.claude/skills/becpg-api` | Instructions for Claude Code and other coding agents |
+| `AGENTS.md`, `.claude/skills/becpg-api` | Instructions for AI coding assistants |
 
 ## About beCPG
 

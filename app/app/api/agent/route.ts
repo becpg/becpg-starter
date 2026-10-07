@@ -8,13 +8,13 @@ const conversations = new Map<string, History>();
 
 function describe(error: unknown): string {
   if (error instanceof Anthropic.AuthenticationError) {
-    return "Claude is not configured: set ANTHROPIC_API_KEY in the .env file at the root of the starter, then restart the app.";
+    return "The AI assistant is not configured: set ANTHROPIC_API_KEY in the .env file at the root of the starter, then restart the app.";
   }
-  if (error instanceof Anthropic.RateLimitError) return "Claude is rate limited, try again in a moment.";
-  if (error instanceof Anthropic.APIError) return `Claude API error ${error.status}: ${error.message}`;
+  if (error instanceof Anthropic.RateLimitError) return "The LLM is rate limited, try again in a moment.";
+  if (error instanceof Anthropic.APIError) return `LLM API error ${error.status}: ${error.message}`;
   // No credential at all: the SDK fails before sending the request.
   if (error instanceof Anthropic.AnthropicError) {
-    return "Claude is not configured: set ANTHROPIC_API_KEY in the .env file at the root of the starter, then restart the app.";
+    return "The AI assistant is not configured: set ANTHROPIC_API_KEY in the .env file at the root of the starter, then restart the app.";
   }
   return error instanceof Error ? error.message : String(error);
 }

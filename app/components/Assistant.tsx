@@ -118,7 +118,7 @@ export default function Assistant() {
     <section className="assistant">
       <header>
         <h2><span className="live" /> Product assistant</h2>
-        <p>Claude works in beCPG through its API. beCPG computes every figure.</p>
+        <p>An AI agent works in beCPG through its API. beCPG computes every figure.</p>
       </header>
       <div className="thread" ref={thread}>
         {items.length === 0 && (
