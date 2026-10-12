@@ -10,7 +10,7 @@ An open source starter where an AI agent works directly in beCPG, the PLM for fo
 cosmetics: it reads your products, builds recipes, and lets the beCPG formulation engine compute
 costs, nutrition, allergens and ingredients.
 
-[![License: MIT](https://img.shields.io/badge/starter-MIT-004353.svg)](LICENSE) [![beCPG Community](https://img.shields.io/badge/beCPG_Community-LGPL_v3-00767b.svg)](https://github.com/becpg/becpg-community) [![AI agent](https://img.shields.io/badge/AI_agent-any_LLM-ff642d.svg)](#talk-to-your-plm)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-00767b.svg)](LICENSE) [![AI agent](https://img.shields.io/badge/AI_agent-any_LLM-ff642d.svg)](#talk-to-your-plm)
 
 [Quick start](#quick-start) · [Talk to your PLM](#talk-to-your-plm) · [Build your own agents](#build-your-own-agents) · [Community and Enterprise](#start-with-community-go-further-with-enterprise)
 
@@ -142,7 +142,7 @@ flowchart LR
 ## FAQ
 
 **Is it free?**
-The starter is under the MIT license and beCPG Community under the LGPL v3. The LLM is billed by your
+The starter and beCPG Community are both under the LGPL v3. The LLM is billed by your
 provider, on your own key. The Enterprise modules and the support are paid.
 
 **Can the agent break my data?**
@@ -181,4 +181,4 @@ beCPG is an open source PLM for the food, beverage and cosmetics industries, dev
 
 ## License
 
-The starter is under the [MIT license](LICENSE). beCPG Community is under the LGPL v3.
+The starter and beCPG Community are under the [LGPL v3](LICENSE).
